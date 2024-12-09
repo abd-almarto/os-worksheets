@@ -1,5 +1,5 @@
 # Object files
-OBJECTS = loader.o kmain.o #sum_of_three.o multiply_two.o divide_two.o
+OBJECTS = loader.o kmain.o #sum_of_three.o 
 
 # Compiler and assembler settings
 CC = gcc
@@ -9,14 +9,12 @@ LDFLAGS = -T link.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf
 
-# Default target
 all: kernel.elf
 
-# Kernel ELF binary
 kernel.elf: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
 
-# ISO creation
+# ISO
 os.iso: kernel.elf
 	cp kernel.elf iso/boot/kernel.elf
 	genisoimage -R \
@@ -30,7 +28,7 @@ os.iso: kernel.elf
 	            -o os.iso \
 	            iso
 
-# Run the OS in QEMU
+
 run: os.iso
 	qemu-system-i386 -nographic -boot d -cdrom os.iso -m 32
 
@@ -42,6 +40,5 @@ run: os.iso
 %.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
 
-# Clean the build directory
 clean:
 	rm -rf *.o kernel.elf os.iso
